@@ -1,0 +1,5 @@
+projectKey=students-testing
+serverUrl=http://localhost:9000
+dashboardUrl=http://localhost:9000/dashboard/index/students-testing
+ceTaskId=AVb59BJV9vMB6kIeh_1q
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AVb59BJV9vMB6kIeh_1q
