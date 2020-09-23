@@ -31,6 +31,12 @@ public class Student {
 	
 	@OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	private Set<Exam> exams = new HashSet<Exam>();
+	
+	@OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+	private Set<Payment> payments = new HashSet<Payment>();
+	
+	@OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+	private Set<Document> documents = new HashSet<Document>();
 
 	public Long getId() {
 		return id;
@@ -64,6 +70,22 @@ public class Student {
 		this.lastName = lastName;
 	}
 
+	public Set<Payment> getPayments() {
+		return payments;
+	}
+
+	public void setPayments(Set<Payment> payments) {
+		this.payments = payments;
+	}
+	
+	public Set<Document> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(Set<Document> documents) {
+		this.documents = documents;
+	}
+	
 	public Set<Enrollment> getEnrollments() {
 		return enrollments;
 	}
