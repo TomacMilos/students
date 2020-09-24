@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.kts.students.model.Course;
 import rs.ac.uns.ftn.kts.students.model.Enrollment;
 import rs.ac.uns.ftn.kts.students.model.Exam;
+import rs.ac.uns.ftn.kts.students.model.Teacher;
 import rs.ac.uns.ftn.kts.students.service.CourseService;
+import rs.ac.uns.ftn.kts.students.service.EnrollmentService;
+import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.EnrollmentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamDTO;
@@ -31,6 +34,12 @@ import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 public class CourseController {
 	@Autowired
 	private CourseService courseService;
+	
+	@Autowired
+	private EnrollmentService enrollmentService;
+	
+	@Autowired
+	private ExamService examService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<CourseDTO>> getCourses() {
@@ -80,6 +89,26 @@ public class CourseController {
 	public ResponseEntity<Void> deleteCourse(@PathVariable Long id){
 		Course course = courseService.findOne(id);
 		if (course != null){
+			
+			for (Enrollment e : course.getEnrollments()) {
+				if (e.getStudent().getId() == course.getId()) {
+					course.remove(e);
+					enrollmentService.save(e);
+				}
+
+			}
+			
+			for (Exam e : course.getExams()) {
+				if (e.getStudent().getId() == course.getId()) {
+					course.remove(e);
+					examService.save(e);
+				}
+			}
+			
+			for (Teacher t : course.getTeachers()) {
+				t.remove(course);
+			}
+			
 			courseService.remove(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {		

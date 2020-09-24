@@ -30,30 +30,6 @@ public class Exam {
     
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 	private ExamPeriod examPeriod;
-    
-    public void remove(Exam exam, Course course) {
-		for(Exam e : course.getExams()) {
-			if (e.equals(exam)) {
-				course.getExams().remove(e);
-			}
-		}
-    }
-    
-    public void remove(Exam exam, Student student) {
-		for(Exam e : student.getExams()) {
-			if (e.equals(exam)) {
-				student.getExams().remove(e);
-			}
-		}
-    }
-    
-    public void remove(Exam exam, ExamPeriod examPeriod) {
-		for(Exam e : examPeriod.getExams()) {
-			if (e.equals(exam)) {
-				examPeriod.getExams().remove(e);
-			}
-		}
-    }
 
 	public Long getId() {
 		return id;

@@ -91,6 +91,11 @@ public class TeacherController {
 	public ResponseEntity<Void> deleteTeacher(@PathVariable Long id){
 		Teacher teacher = teacherService.findOne(id);
 		if (teacher != null){
+			
+			for (Course c : teacher.getCourses()) {
+				c.remove(teacher);
+			}
+			
 			teacherService.remove(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {		

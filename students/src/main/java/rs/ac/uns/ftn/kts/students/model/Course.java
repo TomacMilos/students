@@ -43,16 +43,10 @@ public class Course {
 		exam.setCourse(null);
 	}
 	
-	//treba izmena
-	public void remove(Teacher teacher, Course course) {
-		for(Course c : teacher.getCourses()) {
-			if (c.equals(course)) {
-				teacher.getCourses().remove(c);
-			}
-		}
-
-		getTeachers().remove(teacher);
-	}
+    public void remove(Teacher teacher) {
+        this.teachers.remove(teacher);
+        teacher.getCourses().remove(this);
+    }
 	
 	public Long getId() {
 		return id;

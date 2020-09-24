@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.kts.students.model.Exam;
 import rs.ac.uns.ftn.kts.students.model.ExamPeriod;
 import rs.ac.uns.ftn.kts.students.service.ExamPeriodService;
+import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamPeriodDTO;
@@ -28,6 +29,9 @@ import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 public class ExamPeriodController {
 	@Autowired
 	private ExamPeriodService examPeriodService;
+	
+	@Autowired
+	private ExamService examService;
 	
 	@RequestMapping(value="/all", method = RequestMethod.GET)
 	public ResponseEntity<List<ExamPeriodDTO>> getAllExamPeriods() {
@@ -96,6 +100,14 @@ public class ExamPeriodController {
 	public ResponseEntity<Void> deleteExamPeriod(@PathVariable Long id){
 		ExamPeriod examPeriod = examPeriodService.findOne(id);
 		if (examPeriod != null){
+			
+			for (Exam e : examPeriod.getExams()) {
+				if (e.getStudent().getId() == examPeriod.getId()) {
+					examPeriod.remove(e);
+					examService.save(e);
+				}
+			}
+			
 			examPeriodService.remove(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {		

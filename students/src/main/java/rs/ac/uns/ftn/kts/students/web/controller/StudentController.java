@@ -35,8 +35,9 @@ import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 public class StudentController {
 	@Autowired
 	private StudentService studentService;
-	
+	@Autowired
 	private ExamService examService;
+	@Autowired
 	private EnrollmentService enrollmentService;
 	
 	@RequestMapping(value="/all", method = RequestMethod.GET)
