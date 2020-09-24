@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.kts.students.model.Enrollment;
 import rs.ac.uns.ftn.kts.students.model.Exam;
 import rs.ac.uns.ftn.kts.students.model.Student;
+import rs.ac.uns.ftn.kts.students.service.EnrollmentService;
+import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
 import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.EnrollmentDTO;
@@ -33,6 +35,9 @@ import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 public class StudentController {
 	@Autowired
 	private StudentService studentService;
+	
+	private ExamService examService;
+	private EnrollmentService enrollmentService;
 	
 	@RequestMapping(value="/all", method = RequestMethod.GET)
 	public ResponseEntity<List<StudentDTO>> getAllStudents() {
@@ -100,6 +105,22 @@ public class StudentController {
 	public ResponseEntity<Void> deleteStudent(@PathVariable Long id){
 		Student student = studentService.findOne(id);
 		if (student != null){
+			
+			for (Enrollment e : student.getEnrollments()) {
+				if (e.getStudent().getId() == student.getId()) {
+					student.remove(e);
+					enrollmentService.save(e);
+				}
+
+			}
+			
+			for (Exam e : student.getExams()) {
+				if (e.getStudent().getId() == student.getId()) {
+					student.remove(e);
+					examService.save(e);
+				}
+			}
+			
 			studentService.remove(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {		

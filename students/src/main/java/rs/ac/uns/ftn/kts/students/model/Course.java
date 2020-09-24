@@ -35,6 +35,25 @@ public class Course {
                inverseJoinColumns = @JoinColumn(name="teacher_id", referencedColumnName="id"))
 	private Set<Teacher> teachers = new HashSet<Teacher>();
 	
+	public void remove(Enrollment enrollment) {
+		enrollment.setCourse(null);
+	}
+	
+	public void remove(Exam exam) {
+		exam.setCourse(null);
+	}
+	
+	//treba izmena
+	public void remove(Teacher teacher, Course course) {
+		for(Course c : teacher.getCourses()) {
+			if (c.equals(course)) {
+				teacher.getCourses().remove(c);
+			}
+		}
+
+		getTeachers().remove(teacher);
+	}
+	
 	public Long getId() {
 		return id;
 	}

@@ -25,6 +25,14 @@ public class Payment {
 	
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 	private Student student;
+    
+    public void remove(Student student, Payment payment) {
+		for(Payment p : student.getPayments()) {
+			if (p.equals(payment)) {
+				student.getPayments().remove(p);
+			}
+		}
+    }
 
 	public Long getId() {
 		return id;

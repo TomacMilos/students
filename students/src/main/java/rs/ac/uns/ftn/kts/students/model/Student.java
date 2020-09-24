@@ -37,7 +37,27 @@ public class Student {
 	
 	@OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	private Set<Document> documents = new HashSet<Document>();
-
+	
+	
+	
+	
+	//brisanje enrolmenta, exama, paymenta, documenta
+	public void remove(Enrollment enrollment) {
+		enrollment.setStudent(null);
+	}
+	
+	public void remove(Exam exam) {
+		exam.setStudent(null);
+	}
+	
+	public void remove(Payment payment) {
+		payment.setStudent(null);
+	}
+	
+	public void remove(Document document) {
+		document.setStudent(null);
+	}
+	
 	public Long getId() {
 		return id;
 	}

@@ -19,6 +19,14 @@ public class Document {
 	
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 	private Student student;
+    
+    public void remove(Student student, Document document) {
+		for(Document d : student.getDocuments()) {
+			if (d.equals(document)) {
+				student.getDocuments().remove(d);
+			}
+		}
+    }
 
 	public Long getId() {
 		return id;

@@ -27,6 +27,13 @@ public class ExamPeriod {
 	
 	@OneToMany(mappedBy = "examPeriod", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	private Set<Exam> exams = new HashSet<Exam>();
+	
+	
+    
+	public void remove(Exam exam) {
+		exam.setExamPeriod(null);
+	}
+	
 
 	public Long getId() {
 		return id;

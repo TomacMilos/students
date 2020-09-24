@@ -22,6 +22,18 @@ public class Teacher {
 	
 	@ManyToMany(mappedBy = "teachers")
 	private Set<Course> courses = new HashSet<Course>();
+	
+	
+	//treba izmena
+	public void remove(Course course, Teacher teacher) {
+		for(Teacher t : course.getTeachers()) {
+			if (t.equals(teacher)) {
+				course.getTeachers().remove(t);
+			}
+		}
+
+		getCourses().remove(course);
+	}
 
 	public Long getId() {
 		return id;

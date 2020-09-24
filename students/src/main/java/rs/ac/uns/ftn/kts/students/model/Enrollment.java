@@ -26,7 +26,23 @@ public class Enrollment {
 	
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
 	private Student student;
+	
+    public void remove(Student student, Enrollment enrollment) {
+		for(Enrollment e : student.getEnrollments()) {
+			if (e.equals(enrollment)) {
+				student.getEnrollments().remove(e);
+			}
+		}
+    }
 
+    public void remove(Course course, Enrollment enrollment) {
+		for(Enrollment e : course.getEnrollments()) {
+			if (e.equals(enrollment)) {
+				course.getEnrollments().remove(e);
+			}
+		}
+    }
+    
 	public Long getId() {
 		return id;
 	}
