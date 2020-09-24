@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.kts.students.model.Document;
+import rs.ac.uns.ftn.kts.students.model.Payment;
 import rs.ac.uns.ftn.kts.students.model.Student;
 import rs.ac.uns.ftn.kts.students.service.DocumentService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
 import rs.ac.uns.ftn.kts.students.web.dto.DocumentDTO;
+import rs.ac.uns.ftn.kts.students.web.dto.PaymentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 
 @RestController
@@ -40,6 +42,16 @@ public class DocumentController {
 			documentsDTO.add(new DocumentDTO(d));
 		}
 		return new ResponseEntity<>(documentsDTO, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	public ResponseEntity<DocumentDTO> getDocument(@PathVariable Long id){
+		Document document = documentService.findOne(id);
+		if(document == null){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(new DocumentDTO(document), HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
