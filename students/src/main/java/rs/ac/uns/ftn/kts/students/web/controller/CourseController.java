@@ -91,7 +91,7 @@ public class CourseController {
 		if (course != null){
 			
 			for (Enrollment e : course.getEnrollments()) {
-				if (e.getStudent().getId() == course.getId()) {
+				if (e.getCourse().getId() == course.getId()) {
 					course.remove(e);
 					enrollmentService.save(e);
 				}
@@ -99,14 +99,10 @@ public class CourseController {
 			}
 			
 			for (Exam e : course.getExams()) {
-				if (e.getStudent().getId() == course.getId()) {
+				if (e.getCourse().getId() == course.getId()) {
 					course.remove(e);
 					examService.save(e);
 				}
-			}
-			
-			for (Teacher t : course.getTeachers()) {
-				t.remove(course);
 			}
 			
 			courseService.remove(id);
