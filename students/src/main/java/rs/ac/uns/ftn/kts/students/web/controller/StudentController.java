@@ -17,13 +17,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import rs.ac.uns.ftn.kts.students.model.Document;
 import rs.ac.uns.ftn.kts.students.model.Enrollment;
 import rs.ac.uns.ftn.kts.students.model.Exam;
 import rs.ac.uns.ftn.kts.students.model.Student;
+import rs.ac.uns.ftn.kts.students.service.DocumentService;
 import rs.ac.uns.ftn.kts.students.service.EnrollmentService;
 import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
 import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
+import rs.ac.uns.ftn.kts.students.web.dto.DocumentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.EnrollmentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamPeriodDTO;
@@ -39,6 +42,8 @@ public class StudentController {
 	private ExamService examService;
 	@Autowired
 	private EnrollmentService enrollmentService;
+	@Autowired
+	private DocumentService documentService;
 	
 	@RequestMapping(value="/all", method = RequestMethod.GET)
 	public ResponseEntity<List<StudentDTO>> getAllStudents() {
@@ -122,6 +127,13 @@ public class StudentController {
 				}
 			}
 			
+			for (Document d : student.getDocuments()) {
+				if (d.getStudent().getId() == student.getId()) {
+					student.remove(d);
+					documentService.save(d);
+				}
+			}
+			
 			studentService.remove(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {		
@@ -188,5 +200,22 @@ public class StudentController {
 			examsDTO.add(examDTO);
 		}
 		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{studentId}/documents", method = RequestMethod.GET)
+	public ResponseEntity<List<DocumentDTO>> getStudentDocuments(
+			@PathVariable Long studentId) {
+		Student student = studentService.findOne(studentId);
+		Set<Document> documents = student.getDocuments();
+		List<DocumentDTO> documentsDTO = new ArrayList<>();
+		for (Document d: documents) {
+			DocumentDTO documentDTO = new DocumentDTO();
+			documentDTO.setId(d.getId());
+			documentDTO.setNaziv(d.getNaziv());
+			//we leave student field empty
+			
+			documentsDTO.add(documentDTO);
+		}
+		return new ResponseEntity<>(documentsDTO, HttpStatus.OK);
 	}
 }

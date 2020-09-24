@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.kts.students.model.Course;
 import rs.ac.uns.ftn.kts.students.model.Enrollment;
 import rs.ac.uns.ftn.kts.students.model.Exam;
-import rs.ac.uns.ftn.kts.students.model.Teacher;
 import rs.ac.uns.ftn.kts.students.service.CourseService;
 import rs.ac.uns.ftn.kts.students.service.EnrollmentService;
 import rs.ac.uns.ftn.kts.students.service.ExamService;
