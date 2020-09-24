@@ -11,6 +11,8 @@ truncate table student;
 truncate table course;
 truncate table teacher;
 truncate table exam_period;
+truncate table document;
+truncate table payment;
 
 set foreign_key_checks = 1;
 
@@ -71,5 +73,15 @@ insert into exam (student_id, course_id, exam_period_id, date, exam_points, lab_
 	2, 1, 1, '2016-02-01', 18, 60);
 insert into exam (student_id, course_id, exam_period_id, date, exam_points, lab_points) values (
 	2, 2, 2, '2016-04-19', 17, 57);
+    
+insert into document(naziv, student_id) values ('Izvod iz matične knjige rođenih', 1);
+insert into document(naziv, student_id) values ('Svedočanstvo', 1);
+insert into document(naziv, student_id) values ('Diploma', 2);
+insert into document(naziv, student_id) values ('Uverenje o uplati', 3);
+
+insert into payment(date, svrha_uplate, vrednost_uplate, student_id) values ('2020-09-24 16:00:00', 'Prijava ispita', '600', 1);
+insert into payment(date, svrha_uplate, vrednost_uplate, student_id) values ('2020-09-25 14:00:00', 'Prva rata za godinu', '22500', 1);
+insert into payment(date, svrha_uplate, vrednost_uplate, student_id) values ('2020-09-26 17:00:00', 'Overa semestra', '2500', 2);
+insert into payment(date, svrha_uplate, vrednost_uplate, student_id) values ('2020-09-27 11:00:00', 'Lopovluk fakulteta', '2000', 3);
 
 

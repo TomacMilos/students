@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.kts.students.model.Document;
 import rs.ac.uns.ftn.kts.students.model.Enrollment;
 import rs.ac.uns.ftn.kts.students.model.Exam;
+import rs.ac.uns.ftn.kts.students.model.Payment;
 import rs.ac.uns.ftn.kts.students.model.Student;
 import rs.ac.uns.ftn.kts.students.service.DocumentService;
 import rs.ac.uns.ftn.kts.students.service.EnrollmentService;
@@ -30,6 +31,7 @@ import rs.ac.uns.ftn.kts.students.web.dto.DocumentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.EnrollmentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamPeriodDTO;
+import rs.ac.uns.ftn.kts.students.web.dto.PaymentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 
 @RestController
@@ -217,5 +219,24 @@ public class StudentController {
 			documentsDTO.add(documentDTO);
 		}
 		return new ResponseEntity<>(documentsDTO, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/{studentId}/payments", method = RequestMethod.GET)
+	public ResponseEntity<List<PaymentDTO>> getStudentPayments(
+			@PathVariable Long studentId) {
+		Student student = studentService.findOne(studentId);
+		Set<Payment> payments = student.getPayments();
+		List<PaymentDTO> paymentsDTO = new ArrayList<>();
+		for (Payment p: payments) {
+			PaymentDTO paymentDTO = new PaymentDTO();
+			paymentDTO.setId(p.getId());
+			paymentDTO.setSvrhaUplate(p.getSvrhaUplate());
+			paymentDTO.setVrednostUplate(p.getVrednostUplate());
+			paymentDTO.setDate(p.getDate());
+			//we leave student field empty
+			
+			paymentsDTO.add(paymentDTO);
+		}
+		return new ResponseEntity<>(paymentsDTO, HttpStatus.OK);
 	}
 }
