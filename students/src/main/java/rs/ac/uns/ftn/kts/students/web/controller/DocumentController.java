@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.kts.students.web.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import rs.ac.uns.ftn.kts.students.model.Student;
 import rs.ac.uns.ftn.kts.students.service.DocumentService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
 import rs.ac.uns.ftn.kts.students.web.dto.DocumentDTO;
+import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 
 @RestController
 @RequestMapping(value = "api/documents")
@@ -26,6 +30,17 @@ public class DocumentController {
 
 	@Autowired
 	DocumentService documentService;
+	
+	@RequestMapping(value="/all", method = RequestMethod.GET)
+	public ResponseEntity<List<DocumentDTO>> getAllDocuments() {
+		List<Document> documents = documentService.findAll();
+		//convert documents to DTOs
+		List<DocumentDTO> documentsDTO = new ArrayList<>();
+		for (Document d : documents) {
+			documentsDTO.add(new DocumentDTO(d));
+		}
+		return new ResponseEntity<>(documentsDTO, HttpStatus.OK);
+	}
 	
 	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<DocumentDTO> createDocument(@RequestBody DocumentDTO documentDTO) {
