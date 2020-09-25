@@ -20,6 +20,8 @@ public class Teacher {
 	
 	private String lastName;
 	
+	private String teacherRank;
+	
 	@ManyToMany(mappedBy = "teachers")
 	private Set<Course> courses = new HashSet<Course>();
 	
@@ -50,6 +52,14 @@ public class Teacher {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public String getTeacherRank() {
+		return teacherRank;
+	}
+
+	public void setTeacherRank(String teacherRank) {
+		this.teacherRank = teacherRank;
 	}
 
 	public Set<Course> getCourses() {
