@@ -262,4 +262,16 @@ public class StudentController {
 		}
 		return new ResponseEntity<>(paymentsDTO, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value="/{studentId}/allSum", method = RequestMethod.GET)
+	public ResponseEntity<Integer> getAllPaymentsSum(@PathVariable Long studentId) {
+		Student student = studentService.findOne(studentId);
+		int sum = 0;
+		Set<Payment> payments = student.getPayments();
+		
+		for (Payment p : payments) {
+			sum += p.getVrednostUplate();
+		}
+		return new ResponseEntity<>(sum, HttpStatus.OK);
+	}
 }

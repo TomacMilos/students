@@ -19,7 +19,7 @@ public class Payment {
 	
 	private String svrhaUplate;
 	
-	private String vrednostUplate;
+	private Integer vrednostUplate;
 	
 	private Date date;
 	
@@ -50,11 +50,11 @@ public class Payment {
 		this.svrhaUplate = svrhaUplate;
 	}
 
-	public String getVrednostUplate() {
+	public Integer getVrednostUplate() {
 		return vrednostUplate;
 	}
 
-	public void setVrednostUplate(String vrednostUplate) {
+	public void setVrednostUplate(Integer vrednostUplate) {
 		this.vrednostUplate = vrednostUplate;
 	}
 

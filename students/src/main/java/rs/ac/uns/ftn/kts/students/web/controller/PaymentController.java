@@ -96,5 +96,16 @@ public class PaymentController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@RequestMapping(value="/allSum", method = RequestMethod.GET)
+	public ResponseEntity<Integer> getAllPaymentsSum() {
+		int sum = 0;
+		List<Payment> payments = paymentService.findAll();
+		
+		for (Payment p : payments) {
+			sum += p.getVrednostUplate();
+		}
+		return new ResponseEntity<>(sum, HttpStatus.OK);
+	}
 
 }
