@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.kts.students.web.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import rs.ac.uns.ftn.kts.students.service.ExamPeriodService;
 import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamDTO;
+import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 
 @RestController
 @RequestMapping(value = "api/exams")
@@ -36,7 +40,16 @@ public class ExamController {
 	@Autowired
 	ExamPeriodService examPeriodService;
 	
-	
+	@RequestMapping(value="/all", method = RequestMethod.GET)
+	public ResponseEntity<List<ExamDTO>> getAllExams() {
+		List<Exam> exams = examService.findAll();
+		//convert students to DTOs
+		List<ExamDTO> examsDTO = new ArrayList<>();
+		for (Exam e : exams) {
+			examsDTO.add(new ExamDTO(e));
+		}
+		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
+	}
 
 	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<ExamDTO> createExam(@RequestBody ExamDTO examDTO) {
