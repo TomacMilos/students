@@ -51,9 +51,9 @@ insert into enrollment (start_date, end_date, student_id, course_id) values ('20
 insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 5, 1);
 insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 6, 2);
 
-insert into teacher (first_name, last_name) values ('Milan', 'Jovanovic');
-insert into teacher (first_name, last_name) values ('Sanja', 'Stanic');
-insert into teacher (first_name, last_name) values ('Nemanja', 'Jankovic');
+insert into teacher (first_name, last_name, teacher_rank) values ('Milan', 'Jovanovic', 'Profesor');
+insert into teacher (first_name, last_name, teacher_rank) values ('Sanja', 'Stanic', 'Asistent');
+insert into teacher (first_name, last_name, teacher_rank) values ('Nemanja', 'Jankovic', 'Demonstrator');
 
 insert into teaching (course_id, teacher_id) values (1, 1);
 insert into teaching (course_id, teacher_id) values (1, 2);

@@ -14,13 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.kts.students.model.Document;
-import rs.ac.uns.ftn.kts.students.model.Payment;
 import rs.ac.uns.ftn.kts.students.model.Student;
 import rs.ac.uns.ftn.kts.students.service.DocumentService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
 import rs.ac.uns.ftn.kts.students.web.dto.DocumentDTO;
-import rs.ac.uns.ftn.kts.students.web.dto.PaymentDTO;
-import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 
 @RestController
 @RequestMapping(value = "api/documents")
