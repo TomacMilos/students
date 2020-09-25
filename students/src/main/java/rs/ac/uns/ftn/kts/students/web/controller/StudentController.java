@@ -191,6 +191,7 @@ public class StudentController {
 		Set<Exam> exams = student.getExams();
 		List<ExamDTO> examsDTO = new ArrayList<>();
 		for (Exam e: exams) {
+			if(e.getLabPoints()+e.getExamPoints()==0) {
 			ExamDTO examDTO = new ExamDTO();
 			examDTO.setId(e.getId());
 			examDTO.setExamPoints(e.getExamPoints());
@@ -200,7 +201,29 @@ public class StudentController {
 			examDTO.setExamPeriod(new ExamPeriodDTO(e.getExamPeriod()));
 		
 			examsDTO.add(examDTO);
+			}
 		}
+		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/{studentId}/examspass", method = RequestMethod.GET)
+	public ResponseEntity<List<ExamDTO>> getStudentExamsPass(
+			@PathVariable Long studentId) {
+		Student student = studentService.findOne(studentId);
+		Set<Exam> exams = student.getExams();
+		List<ExamDTO> examsDTO = new ArrayList<>();
+		for (Exam e: exams) {
+			if(e.getLabPoints()+e.getExamPoints()>0) {
+			ExamDTO examDTO = new ExamDTO();
+			examDTO.setId(e.getId());
+			examDTO.setExamPoints(e.getExamPoints());
+			examDTO.setLabPoints(e.getLabPoints());
+			examDTO.setDate(e.getDate());
+			examDTO.setCourse(new CourseDTO(e.getCourse()));
+			examDTO.setExamPeriod(new ExamPeriodDTO(e.getExamPeriod()));
+			
+			examsDTO.add(examDTO);
+			}
+			}
 		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
 	}
 	
