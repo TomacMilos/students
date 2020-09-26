@@ -23,12 +23,13 @@ import rs.ac.uns.ftn.kts.students.service.CourseService;
 import rs.ac.uns.ftn.kts.students.service.ExamPeriodService;
 import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
+import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 
 @RestController
 @RequestMapping(value = "api/exams")
-@CrossOrigin(origins="http://localhost:4200",allowedHeaders="*")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 public class ExamController {
 	@Autowired
 	ExamService examService;
@@ -41,11 +42,11 @@ public class ExamController {
 
 	@Autowired
 	ExamPeriodService examPeriodService;
-	
-	@RequestMapping(value="/all", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<List<ExamDTO>> getAllExams() {
 		List<Exam> exams = examService.findAll();
-		//convert students to DTOs
+		// convert students to DTOs
 		List<ExamDTO> examsDTO = new ArrayList<>();
 		for (Exam e : exams) {
 			examsDTO.add(new ExamDTO(e));
@@ -53,16 +54,24 @@ public class ExamController {
 		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<ExamDTO> getExam(@PathVariable Long id) {
+		Exam exam = examService.findOne(id);
+		if (exam == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<>(new ExamDTO(exam), HttpStatus.OK);
+	}
+
 	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<ExamDTO> createExam(@RequestBody ExamDTO examDTO) {
 		// a new exam must have course and examPeriod defined
-		if (examDTO.getCourse() == null
-				|| examDTO.getExamPeriod() == null) {
+		if (examDTO.getCourse() == null || examDTO.getExamPeriod() == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Course course = courseService.findOne(examDTO.getCourse().getId());
-		ExamPeriod examPeriod = examPeriodService.findOne(examDTO
-				.getExamPeriod().getId());
+		ExamPeriod examPeriod = examPeriodService.findOne(examDTO.getExamPeriod().getId());
 		if (course == null || examPeriod == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -72,7 +81,6 @@ public class ExamController {
 		cal.setTime(examDTO.getDate());
 		cal.add(Calendar.HOUR, -2);
 		Date twoHourBack = cal.getTime();
-		
 
 		exam.setDate(twoHourBack);
 		exam.setExamPoints(0);
