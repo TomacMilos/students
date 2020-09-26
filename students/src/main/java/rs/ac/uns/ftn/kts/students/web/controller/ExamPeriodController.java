@@ -26,113 +26,114 @@ import rs.ac.uns.ftn.kts.students.web.dto.ExamPeriodDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 
 @RestController
-@RequestMapping(value="api/examPeriods")
-@CrossOrigin(origins="http://localhost:4200",allowedHeaders="*")
+@RequestMapping(value = "api/examPeriods")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 public class ExamPeriodController {
 	@Autowired
 	private ExamPeriodService examPeriodService;
-	
+
 	@Autowired
 	private ExamService examService;
-	
-	@RequestMapping(value="/all", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<List<ExamPeriodDTO>> getAllExamPeriods() {
 		List<ExamPeriod> examPeriods = examPeriodService.findAll();
-		//convert examPeriods to DTOs
+		// convert examPeriods to DTOs
 		List<ExamPeriodDTO> examPeriodsDTO = new ArrayList<>();
 		for (ExamPeriod s : examPeriods) {
 			examPeriodsDTO.add(new ExamPeriodDTO(s));
 		}
 		return new ResponseEntity<>(examPeriodsDTO, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<ExamPeriodDTO>> getExamPeriodsPage(Pageable page) {
-		//page object holds data about pagination and sorting
-		//the object is created based on the url parameters "page", "size" and "sort" 
+		// page object holds data about pagination and sorting
+		// the object is created based on the url parameters "page", "size" and "sort"
 		Page<ExamPeriod> examPeriods = examPeriodService.findAll(page);
-		
-		//convert examPeriods to DTOs
+
+		// convert examPeriods to DTOs
 		List<ExamPeriodDTO> examPeriodsDTO = new ArrayList<>();
 		for (ExamPeriod s : examPeriods) {
 			examPeriodsDTO.add(new ExamPeriodDTO(s));
 		}
 		return new ResponseEntity<>(examPeriodsDTO, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public ResponseEntity<ExamPeriodDTO> getExamPeriod(@PathVariable Long id){
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<ExamPeriodDTO> getExamPeriod(@PathVariable Long id) {
 		ExamPeriod examPeriod = examPeriodService.findOne(id);
-		if(examPeriod == null){
+		if (examPeriod == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		
+
 		return new ResponseEntity<>(new ExamPeriodDTO(examPeriod), HttpStatus.OK);
 	}
-	
-	@RequestMapping(method=RequestMethod.POST, consumes="application/json")
-	public ResponseEntity<ExamPeriodDTO> saveExamPeriod(@RequestBody ExamPeriodDTO examPeriodDTO){
+
+	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+	public ResponseEntity<ExamPeriodDTO> saveExamPeriod(@RequestBody ExamPeriodDTO examPeriodDTO) {
 		ExamPeriod examPeriod = new ExamPeriod();
-		
+
 		examPeriod.setName(examPeriodDTO.getName());
 		examPeriod.setStartDate(examPeriodDTO.getStartDate());
 		examPeriod.setEndDate(examPeriodDTO.getEndDate());
-		
+
 		examPeriod = examPeriodService.save(examPeriod);
-		return new ResponseEntity<>(new ExamPeriodDTO(examPeriod), HttpStatus.CREATED);	
+		return new ResponseEntity<>(new ExamPeriodDTO(examPeriod), HttpStatus.CREATED);
 	}
-	
-	@RequestMapping(method=RequestMethod.PUT, consumes="application/json")
-	public ResponseEntity<ExamPeriodDTO> updateExamPeriod(@RequestBody ExamPeriodDTO examPeriodDTO){
-		//a examPeriod must exist
-		ExamPeriod examPeriod = examPeriodService.findOne(examPeriodDTO.getId()); 
+
+	@RequestMapping(method = RequestMethod.PUT, consumes = "application/json")
+	public ResponseEntity<ExamPeriodDTO> updateExamPeriod(@RequestBody ExamPeriodDTO examPeriodDTO) {
+		// a examPeriod must exist
+		ExamPeriod examPeriod = examPeriodService.findOne(examPeriodDTO.getId());
 		if (examPeriod == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		examPeriod.setName(examPeriodDTO.getName());
 		examPeriod.setStartDate(examPeriodDTO.getStartDate());
 		examPeriod.setEndDate(examPeriodDTO.getEndDate());
-		
+
 		examPeriod = examPeriodService.save(examPeriod);
-		return new ResponseEntity<>(new ExamPeriodDTO(examPeriod), HttpStatus.OK);	
+		return new ResponseEntity<>(new ExamPeriodDTO(examPeriod), HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
-	public ResponseEntity<Void> deleteExamPeriod(@PathVariable Long id){
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deleteExamPeriod(@PathVariable Long id) {
 		ExamPeriod examPeriod = examPeriodService.findOne(id);
-		if (examPeriod != null){
-			
+		if (examPeriod != null) {
+
 			for (Exam e : examPeriod.getExams()) {
 				if (e.getExamPeriod().getId() == examPeriod.getId()) {
 					examPeriod.remove(e);
 					examService.save(e);
 				}
 			}
-			
+
 			examPeriodService.remove(id);
 			return new ResponseEntity<>(HttpStatus.OK);
-		} else {		
+		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@RequestMapping(value = "/{examPeriodId}/exams", method = RequestMethod.GET)
-	public ResponseEntity<List<ExamDTO>> getExamPeriodExams(
-			@PathVariable Long examPeriodId) {
+	public ResponseEntity<List<ExamDTO>> getExamPeriodExams(@PathVariable Long examPeriodId) {
 		ExamPeriod examPeriod = examPeriodService.findOne(examPeriodId);
 		Set<Exam> exams = examPeriod.getExams();
 		List<ExamDTO> examsDTO = new ArrayList<>();
-		for (Exam e: exams) {
-			ExamDTO examDTO = new ExamDTO();
-			examDTO.setId(e.getId());
-			examDTO.setExamPoints(e.getExamPoints());
-			examDTO.setLabPoints(e.getLabPoints());
-			examDTO.setDate(e.getDate());
-			examDTO.setCourse(new CourseDTO(e.getCourse()));
-			examDTO.setStudent(new StudentDTO(e.getStudent()));
-		
-			examsDTO.add(examDTO);
+		for (Exam e : exams) {
+			if (e.getStudent() != null) {
+				ExamDTO examDTO = new ExamDTO();
+				examDTO.setId(e.getId());
+				examDTO.setExamPoints(e.getExamPoints());
+				examDTO.setLabPoints(e.getLabPoints());
+				examDTO.setDate(e.getDate());
+				examDTO.setCourse(new CourseDTO(e.getCourse()));
+				examDTO.setStudent(new StudentDTO(e.getStudent()));
+
+				examsDTO.add(examDTO);
+			}
 		}
 		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
 	}

@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.kts.students.web.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +66,15 @@ public class ExamController {
 		if (course == null || examPeriod == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-
 		Exam exam = new Exam();
-		exam.setDate(examDTO.getDate());
+		Calendar cal = Calendar.getInstance();
+		// remove next line if you're always using the current time.
+		cal.setTime(examDTO.getDate());
+		cal.add(Calendar.HOUR, -2);
+		Date twoHourBack = cal.getTime();
+		
+
+		exam.setDate(twoHourBack);
 		exam.setExamPoints(0);
 		exam.setLabPoints(0);
 		exam.setStudent(null);
