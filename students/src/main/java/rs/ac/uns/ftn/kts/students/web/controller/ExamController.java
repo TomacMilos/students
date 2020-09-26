@@ -53,24 +53,23 @@ public class ExamController {
 
 	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<ExamDTO> createExam(@RequestBody ExamDTO examDTO) {
-		// a new exam must have student, course and examPeriod defined
-		if (examDTO.getStudent() == null || examDTO.getCourse() == null
+		// a new exam must have course and examPeriod defined
+		if (examDTO.getCourse() == null
 				|| examDTO.getExamPeriod() == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		Student student = studentService.findOne(examDTO.getStudent().getId());
 		Course course = courseService.findOne(examDTO.getCourse().getId());
 		ExamPeriod examPeriod = examPeriodService.findOne(examDTO
 				.getExamPeriod().getId());
-		if (student == null || course == null || examPeriod == null) {
+		if (course == null || examPeriod == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 		Exam exam = new Exam();
 		exam.setDate(examDTO.getDate());
-		exam.setExamPoints(examDTO.getExamPoints());
-		exam.setLabPoints(examDTO.getLabPoints());
-		exam.setStudent(student);
+		exam.setExamPoints(0);
+		exam.setLabPoints(0);
+		exam.setStudent(null);
 		exam.setCourse(course);
 		exam.setExamPeriod(examPeriod);
 

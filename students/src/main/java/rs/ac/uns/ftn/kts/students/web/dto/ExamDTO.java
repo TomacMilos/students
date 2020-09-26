@@ -23,7 +23,9 @@ public class ExamDTO {
 		labPoints = exam.getLabPoints();
 		date = exam.getDate();
 		course = new CourseDTO(exam.getCourse());
-		student = new StudentDTO(exam.getStudent());
+		if (exam.getStudent() != null) {
+			student = new StudentDTO(exam.getStudent());
+		}
 		examPeriod = new ExamPeriodDTO(exam.getExamPeriod());
 	}
 	
