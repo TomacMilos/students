@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.kts.students.model.Authority;
 import rs.ac.uns.ftn.kts.students.model.Student;
+import rs.ac.uns.ftn.kts.students.model.Teacher;
 import rs.ac.uns.ftn.kts.students.model.User;
 import rs.ac.uns.ftn.kts.students.service.AuthorityService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
+import rs.ac.uns.ftn.kts.students.service.TeacherService;
 import rs.ac.uns.ftn.kts.students.service.UserService;
 import rs.ac.uns.ftn.kts.students.web.dto.UserDTO;
 
@@ -31,6 +33,9 @@ public class UserController {
 	
 	@Autowired
 	private AuthorityService authorityService;
+	
+	@Autowired
+	private TeacherService teacherService;
 
 	@GetMapping(value = "/login/{username}/{password}")
 	public ResponseEntity<UserDTO> login(@PathVariable("username") String username,
@@ -91,6 +96,51 @@ public class UserController {
 
 	}
 	
+	@PostMapping(value = "/registerTeacher/{username}/{password}/{firstName}/{lastName}/{teacherRank}")
+	public ResponseEntity<Void> registerTeacher(@PathVariable("username") String username,
+			@PathVariable("password") String password, @PathVariable("firstName") String firstName,
+			@PathVariable("lastName") String lastName, @PathVariable("teacherRank") String teacherRank){
+		
+		Teacher teacher = new Teacher();
+		teacher.setFirstName(firstName);
+		teacher.setLastName(lastName);
+		teacher.setTeacherRank(teacherRank);
+		teacher.setCourses(null);
+
+		teacher = teacherService.save(teacher);
+		
+		User user = new User();
+		
+		user.setUsername(username);
+		user.setPassword(password);
+		Authority auth = authorityService.findByName("NASTAVNIK");
+		user.setAuthority(auth);
+		user.setStudent(null);
+		user.setTeacher(teacher);
+		
+		userService.save(user);
+		System.out.println("REGISTER..........");
+		return new ResponseEntity<Void>(HttpStatus.OK);
+
+	}
 	
+	@PostMapping(value = "/registerAdmin/{username}/{password}")
+	public ResponseEntity<Void> registerAdmin(@PathVariable("username") String username,
+			@PathVariable("password") String password){
+		
+		User user = new User();
+		
+		user.setUsername(username);
+		user.setPassword(password);
+		Authority auth = authorityService.findByName("ADMIN");
+		user.setAuthority(auth);
+		user.setStudent(null);
+		user.setTeacher(null);
+		
+		userService.save(user);
+		System.out.println("REGISTER..........");
+		return new ResponseEntity<Void>(HttpStatus.OK);
+
+	}
 
 }
