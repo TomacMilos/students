@@ -43,7 +43,7 @@ public class UserController {
 			jebeniDto.setTeacherid(user.getTeacher().getId());
 			jebeniDto.setUsername(user.getUsername());
 			jebeniDto.setAuthority(user.getAuthority());
-		} else if (user.getStudent() != null && user.getTeacher() != null) {
+		} else if(user.getStudent() == null && user.getTeacher() == null) {
 			jebeniDto.setId(user.getId());
 			jebeniDto.setPassword(user.getPassword());
 			jebeniDto.setUsername(user.getUsername());
