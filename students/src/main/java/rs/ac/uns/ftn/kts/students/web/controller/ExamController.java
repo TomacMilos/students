@@ -18,14 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.kts.students.model.Course;
 import rs.ac.uns.ftn.kts.students.model.Exam;
 import rs.ac.uns.ftn.kts.students.model.ExamPeriod;
-import rs.ac.uns.ftn.kts.students.model.Student;
 import rs.ac.uns.ftn.kts.students.service.CourseService;
 import rs.ac.uns.ftn.kts.students.service.ExamPeriodService;
 import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
-import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.ExamDTO;
-import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
 
 @RestController
 @RequestMapping(value = "api/exams")
