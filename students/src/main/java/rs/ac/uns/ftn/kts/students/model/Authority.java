@@ -1,26 +1,17 @@
 package rs.ac.uns.ftn.kts.students.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Authority {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	String name;
-	
-	@OneToMany(mappedBy = "authority", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-	private Set<UserAuthority> userAuthorities = new HashSet<UserAuthority>();
 
 	public Long getId() {
 		return id;
@@ -38,11 +29,4 @@ public class Authority {
 		this.name = name;
 	}
 
-	public Set<UserAuthority> getUserAuthorities() {
-		return userAuthorities;
-	}
-
-	public void setUserAuthorities(Set<UserAuthority> userAuthorities) {
-		this.userAuthorities = userAuthorities;
-	}
 }

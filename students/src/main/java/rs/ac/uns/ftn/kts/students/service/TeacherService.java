@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.kts.students.repository.TeacherRepository;
 
 @Service
 public class TeacherService {
+	
 	@Autowired
 	TeacherRepository teacherRepository;
 	

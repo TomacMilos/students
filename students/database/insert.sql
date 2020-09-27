@@ -1,7 +1,6 @@
 set foreign_key_checks = 0;
 
 -- delete all rows
-truncate table user_authority;
 truncate table authority;
 truncate table user;
 truncate table enrollment;
@@ -16,16 +15,10 @@ truncate table payment;
 
 set foreign_key_checks = 1;
 
-insert into authority (name) values ('ROLE_ADMIN');
-insert into authority (name) values ('ROLE_USER');
+insert into authority (name) values ('ADMIN');
+insert into authority (name) values ('STUDENT');
+insert into authority (name) values ('NASTAVNIK');
 
--- password is 'admin' (bcrypt encoded) 
-insert into user (username, password) values ('admin', '$2a$04$SwzgBrIJZhfnzOw7KFcdzOTiY6EFVwIpG7fkF/D1w26G1.fWsi.aK');
--- password is 'user' (bcrypt encoded)
-insert into user (username, password) values ('user', '$2a$04$Amda.Gm4Q.ZbXz9wcohDHOhOBaNQAkSS1QO26Eh8Hovu3uzEpQvcq');
-
-insert into user_authority (user_id, authority_id) values (1, 1); -- admin has ROLE_ADMIN
-insert into user_authority (user_id, authority_id) values (2, 2); -- user has ROLE_USER
 
 insert into student (card_number, first_name, last_name) values ('ra1-2014', 'Marko', 'Marković');
 insert into student (card_number, first_name, last_name) values ('ra2-2014', 'Milan', 'Milanović');
@@ -83,5 +76,10 @@ insert into payment(date, svrha_uplate, vrednost_uplate, student_id) values ('20
 insert into payment(date, svrha_uplate, vrednost_uplate, student_id) values ('2020-09-25 14:00:00', 'Prva rata za godinu', 22500, 1);
 insert into payment(date, svrha_uplate, vrednost_uplate, student_id) values ('2020-09-26 17:00:00', 'Overa semestra', 2500, 2);
 insert into payment(date, svrha_uplate, vrednost_uplate, student_id) values ('2020-09-27 11:00:00', 'Lopovluk fakulteta', 2000, 3);
+
+INSERT INTO user (password, username, authority_id) VALUES ('admin', 'admin',1);
+INSERT INTO user (password, username, authority_id,teacher_id) VALUES ('nastavnik', 'nastavnik', 3, 1);
+INSERT INTO user (password, username, authority_id,student_id) VALUES ('student', 'student', 2, 1);
+
 
 
