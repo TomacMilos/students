@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.kts.students.model.Course;
 import rs.ac.uns.ftn.kts.students.model.Teacher;
+import rs.ac.uns.ftn.kts.students.model.User;
 import rs.ac.uns.ftn.kts.students.service.TeacherService;
+import rs.ac.uns.ftn.kts.students.service.UserService;
 import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.TeacherDTO;
 
@@ -28,6 +30,9 @@ import rs.ac.uns.ftn.kts.students.web.dto.TeacherDTO;
 public class TeacherController {
 	@Autowired
 	private TeacherService teacherService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping(value="/all", method = RequestMethod.GET)
 	public ResponseEntity<List<TeacherDTO>> getAllTeachers() {
@@ -96,6 +101,17 @@ public class TeacherController {
 			
 			for (Course c : teacher.getCourses()) {
 				c.remove(teacher);
+			}
+			
+			List<User> users = userService.findAll();
+			
+			for (User user : users) {
+				if (user.getTeacher() != null) {
+					if (user.getTeacher().getId() == id) {
+						userService.remove(user.getId());
+					}
+				}
+
 			}
 			
 			teacherService.remove(id);

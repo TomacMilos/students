@@ -23,10 +23,12 @@ import rs.ac.uns.ftn.kts.students.model.Enrollment;
 import rs.ac.uns.ftn.kts.students.model.Exam;
 import rs.ac.uns.ftn.kts.students.model.Payment;
 import rs.ac.uns.ftn.kts.students.model.Student;
+import rs.ac.uns.ftn.kts.students.model.User;
 import rs.ac.uns.ftn.kts.students.service.DocumentService;
 import rs.ac.uns.ftn.kts.students.service.EnrollmentService;
 import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
+import rs.ac.uns.ftn.kts.students.service.UserService;
 import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.DocumentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.EnrollmentDTO;
@@ -47,6 +49,8 @@ public class StudentController {
 	private EnrollmentService enrollmentService;
 	@Autowired
 	private DocumentService documentService;
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<List<StudentDTO>> getAllStudents() {
@@ -135,6 +139,17 @@ public class StudentController {
 					student.remove(d);
 					documentService.save(d);
 				}
+			}
+			
+			List<User> users = userService.findAll();
+			
+			for (User user : users) {
+				if (user.getStudent() != null) {
+					if (user.getStudent().getId() == id) {
+						userService.remove(user.getId());
+					}
+				}
+
 			}
 
 			studentService.remove(id);
