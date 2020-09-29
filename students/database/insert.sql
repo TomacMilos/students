@@ -20,29 +20,33 @@ insert into authority (name) values ('STUDENT');
 insert into authority (name) values ('NASTAVNIK');
 
 
-insert into student (card_number, first_name, last_name) values ('ra1-2014', 'Marko', 'Marković');
-insert into student (card_number, first_name, last_name) values ('ra2-2014', 'Milan', 'Milanović');
-insert into student (card_number, first_name, last_name) values ('ra3-2014', 'Ivana', 'Novaković');
-insert into student (card_number, first_name, last_name) values ('ra4-2014', 'Bojan', 'Bojić');
-insert into student (card_number, first_name, last_name) values ('ra5-2014', 'Jelena', 'Marković');
-insert into student (card_number, first_name, last_name) values ('ra6-2014', 'Zoran', 'Zoranović');
-insert into student (card_number, first_name, last_name) values ('ra7-2014', 'Milica', 'Petrović');
-insert into student (card_number, first_name, last_name) values ('ra8-2014', 'Petar', 'Petrović');
-insert into student (card_number, first_name, last_name) values ('ra9-2014', 'Igor', 'Jovin');
+insert into student (card_number, first_name, last_name) values ('sf1-2014', 'Marko', 'Marković');
+insert into student (card_number, first_name, last_name) values ('sf2-2014', 'Milan', 'Milanović');
+insert into student (card_number, first_name, last_name) values ('sf3-2014', 'Ivana', 'Novaković');
+insert into student (card_number, first_name, last_name) values ('sf4-2014', 'Bojan', 'Bojić');
+insert into student (card_number, first_name, last_name) values ('sf5-2014', 'Jelena', 'Marković');
+insert into student (card_number, first_name, last_name) values ('sf6-2014', 'Zoran', 'Zoranović');
+insert into student (card_number, first_name, last_name) values ('sf7-2014', 'Milica', 'Petrović');
+insert into student (card_number, first_name, last_name) values ('sf8-2014', 'Petar', 'Petrović');
+insert into student (card_number, first_name, last_name) values ('sf9-2014', 'Igor', 'Jovin');
 
 insert into course (name) values ('Matematika');
 insert into course (name) values ('Osnove programiranja');
 insert into course (name) values ('Objektno programiranje');
+insert into course (name) values ('TSEO');
+insert into course (name) values ('Sistemski Softver');
 
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 1, 1);
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 2, 1);
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 3, 1);
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 4, 1);
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 1, 2);
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 2, 2);
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 3, 2);
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 5, 1);
-insert into enrollment (start_date, end_date, student_id, course_id) values ('2015-01-01', '2015-06-01', 6, 2);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 1, 1);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 2, 1);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 3, 1);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 4, 1);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 1, 2);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 2, 2);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 3, 2);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 5, 1);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 6, 2);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 1, 4);
+insert into enrollment (start_date, end_date, student_id, course_id) values ('2020-01-01', '2021-01-01', 1, 5);
 
 insert into teacher (first_name, last_name, teacher_rank) values ('Milan', 'Jovanovic', 'Profesor');
 insert into teacher (first_name, last_name, teacher_rank) values ('Sanja', 'Stanic', 'Asistent');
@@ -50,22 +54,25 @@ insert into teacher (first_name, last_name, teacher_rank) values ('Nemanja', 'Ja
 
 insert into teaching (course_id, teacher_id) values (1, 1);
 insert into teaching (course_id, teacher_id) values (1, 2);
+insert into teaching (course_id, teacher_id) values (1, 4);
 insert into teaching (course_id, teacher_id) values (2, 2);
 insert into teaching (course_id, teacher_id) values (3, 3);
 
-insert into exam_period (name, start_date, end_date) values ('Januarski 2016', '2016-01-27', '2016-02-25');
-insert into exam_period (name, start_date, end_date) values ('Aprilski 2016', '2016-04-18', '2016-04-23');
-insert into exam_period (name, start_date, end_date) values ('Junski 2016', '2016-06-15', '2016-07-14');
-insert into exam_period (name, start_date, end_date) values ('Septembarski 2016', '2016-08-27', '2016-09-25');
+insert into exam_period (name, start_date, end_date) values ('Januarski 2020', '2020-01-27', '2020-02-25');
+insert into exam_period (name, start_date, end_date) values ('Aprilski 2020', '2020-04-18', '2020-04-23');
+insert into exam_period (name, start_date, end_date) values ('Septembarski 2020', '2020-09-20', '2020-10-05');
+insert into exam_period (name, start_date, end_date) values ('Oktobarski 2020', '2020-10-05', '2020-10-25');
 
 insert into exam (student_id, course_id, exam_period_id, date, exam_points, lab_points) values (
-	1, 1, 1, '2016-02-01', 20, 70);
+	1, 1, 1, '2020-02-01 15:00:00', 20, 70);
 insert into exam (student_id, course_id, exam_period_id, date, exam_points, lab_points) values (
-	1, 2, 2, '2016-04-19', 15, 55);
+	1, 2, 2, '2020-04-19 17:00:00', 15, 55);
 insert into exam (student_id, course_id, exam_period_id, date, exam_points, lab_points) values (
-	2, 1, 1, '2016-02-01', 18, 60);
+	1, 4, 2, '2020-04-19 09:00:00', 15, 30);
 insert into exam (student_id, course_id, exam_period_id, date, exam_points, lab_points) values (
-	2, 2, 2, '2016-04-19', 17, 57);
+	2, 1, 1, '2020-02-01 12:00:00', 18, 60);
+insert into exam (student_id, course_id, exam_period_id, date, exam_points, lab_points) values (
+	2, 2, 2, '2020-04-19 20:00:00', 17, 57);
     
 insert into document(naziv, student_id) values ('Izvod iz matične knjige rođenih', 1);
 insert into document(naziv, student_id) values ('Svedočanstvo', 1);
