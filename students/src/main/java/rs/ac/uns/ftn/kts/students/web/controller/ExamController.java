@@ -142,4 +142,24 @@ public class ExamController {
 		return new ResponseEntity<>(new ExamDTO(exam), HttpStatus.CREATED);
 	}
 	
+	@RequestMapping(value = "/examDate", method = RequestMethod.PUT, consumes = "application/json")
+	public ResponseEntity<ExamDTO> updateExamDate(@RequestBody ExamDTO examDTO) {
+		// an exam must exist
+		Exam exam = examService.findOne(examDTO.getId());
+		if (exam == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+		Calendar cal = Calendar.getInstance();
+		// remove next line if you're always using the current time.
+		cal.setTime(examDTO.getDate());
+		cal.add(Calendar.HOUR, -2);
+		Date twoHourBack = cal.getTime();
+
+		exam.setDate(twoHourBack);
+
+		exam = examService.save(exam);
+		return new ResponseEntity<>(new ExamDTO(exam), HttpStatus.OK);
+	}
+	
 }
