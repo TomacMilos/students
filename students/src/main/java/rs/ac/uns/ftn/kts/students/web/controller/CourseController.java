@@ -185,6 +185,8 @@ public class CourseController {
 	public ResponseEntity<List<CourseDTO>> getExamPeriodCourses(@PathVariable("studentId") Long studentId,
 			@PathVariable("examPeriodId") Long examPeriodId) {
 		
+		List<Exam> allExams = examService.findAll();
+		
 		List<Enrollment> enrollments = enrollmentService.findAll();
 		
 		List<Course> coursesStudent = new ArrayList<>();
@@ -202,6 +204,14 @@ public class CourseController {
 		for (Exam exam : examPeriodExams) {
 			if (exam.getStudent().getId() == studentId) {
 				if (coursesStudent.contains(exam.getCourse())) {
+					coursesStudent.remove(exam.getCourse());
+				}
+			}
+		}
+		
+		for (Exam exam : allExams) {
+			if (exam.getStudent().getId() == studentId) {
+				if (coursesStudent.contains(exam.getCourse()) && (exam.getExamPoints() + exam.getLabPoints()) >= 51) {
 					coursesStudent.remove(exam.getCourse());
 				}
 			}
