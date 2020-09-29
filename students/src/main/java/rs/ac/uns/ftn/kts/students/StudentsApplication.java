@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication  // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class StudentsApplication 
 {
+	//Fikii
     public static void main( String[] args )
     {	
     	SpringApplication.run(StudentsApplication.class, args);
