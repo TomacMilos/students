@@ -204,6 +204,8 @@ public class StudentController {
 		List<ExamDTO> examsDTO = new ArrayList<>();
 		Date date = new Date();
 		for (Exam e : exams) {
+			if (e.getDate() != null) {
+				
 			if (e.getLabPoints() + e.getExamPoints() == 0 && e.getDate().before(date)) {
 				ExamDTO examDTO = new ExamDTO();
 				examDTO.setId(e.getId());
@@ -214,6 +216,7 @@ public class StudentController {
 				examDTO.setExamPeriod(new ExamPeriodDTO(e.getExamPeriod()));
 
 				examsDTO.add(examDTO);
+			}
 			}
 		}
 		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
@@ -226,6 +229,7 @@ public class StudentController {
 		List<ExamDTO> examsDTO = new ArrayList<>();
 		Date date = new Date();
 		for (Exam e : exams) {
+			if (e.getDate() != null) {
 			if (e.getLabPoints() + e.getExamPoints() == 0 && e.getDate().after(date)) {
 				ExamDTO examDTO = new ExamDTO();
 				examDTO.setId(e.getId());
@@ -236,6 +240,7 @@ public class StudentController {
 				examDTO.setExamPeriod(new ExamPeriodDTO(e.getExamPeriod()));
 
 				examsDTO.add(examDTO);
+			}
 			}
 		}
 		return new ResponseEntity<>(examsDTO, HttpStatus.OK);

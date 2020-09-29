@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.kts.students.model.Course;
 import rs.ac.uns.ftn.kts.students.model.Exam;
 import rs.ac.uns.ftn.kts.students.model.ExamPeriod;
+import rs.ac.uns.ftn.kts.students.model.Student;
 import rs.ac.uns.ftn.kts.students.service.CourseService;
 import rs.ac.uns.ftn.kts.students.service.ExamPeriodService;
 import rs.ac.uns.ftn.kts.students.service.ExamService;
@@ -116,4 +117,29 @@ public class ExamController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@RequestMapping(value = "/{studentId}/examRegistration", method = RequestMethod.POST, consumes = "application/json")
+	public ResponseEntity<ExamDTO> registerExam(@PathVariable Long studentId, @RequestBody ExamDTO examDTO) {
+		// a new exam must have course and examPeriod defined
+		if (examDTO.getCourse() == null || examDTO.getExamPeriod() == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		Course course = courseService.findOne(examDTO.getCourse().getId());
+		ExamPeriod examPeriod = examPeriodService.findOne(examDTO.getExamPeriod().getId());
+		Student student = studentService.findOne(studentId);
+		if (course == null || examPeriod == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		Exam exam = new Exam();
+		exam.setDate(null);
+		exam.setExamPoints(0);
+		exam.setLabPoints(0);
+		exam.setStudent(student);
+		exam.setCourse(course);
+		exam.setExamPeriod(examPeriod);
+
+		exam = examService.save(exam);
+		return new ResponseEntity<>(new ExamDTO(exam), HttpStatus.CREATED);
+	}
+	
 }
