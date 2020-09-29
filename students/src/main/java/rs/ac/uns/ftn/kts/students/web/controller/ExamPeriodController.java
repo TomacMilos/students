@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.kts.students.web.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -137,4 +138,19 @@ public class ExamPeriodController {
 		}
 		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/nextExamPeriods", method = RequestMethod.GET)
+	public ResponseEntity<List<ExamPeriodDTO>> getNextExamPeriods() {
+		List<ExamPeriod> examPeriods = examPeriodService.findAll();
+		Date date = new Date();
+		// convert examPeriods to DTOs
+		List<ExamPeriodDTO> examPeriodsDTO = new ArrayList<>();
+		for (ExamPeriod s : examPeriods) {
+			if (s.getEndDate().after(date)) {
+				examPeriodsDTO.add(new ExamPeriodDTO(s));
+			}
+		}
+		return new ResponseEntity<>(examPeriodsDTO, HttpStatus.OK);
+	}
+	
 }

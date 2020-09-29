@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.kts.students.model.Course;
 import rs.ac.uns.ftn.kts.students.model.Enrollment;
 import rs.ac.uns.ftn.kts.students.model.Exam;
+import rs.ac.uns.ftn.kts.students.model.ExamPeriod;
 import rs.ac.uns.ftn.kts.students.service.CourseService;
 import rs.ac.uns.ftn.kts.students.service.EnrollmentService;
+import rs.ac.uns.ftn.kts.students.service.ExamPeriodService;
 import rs.ac.uns.ftn.kts.students.service.ExamService;
 import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.EnrollmentDTO;
@@ -40,6 +42,9 @@ public class CourseController {
 	
 	@Autowired
 	private ExamService examService;
+	
+	@Autowired
+	private ExamPeriodService  examPeriodService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<CourseDTO>> getCourses() {
@@ -119,6 +124,7 @@ public class CourseController {
 		Set<Enrollment> enrollments = course.getEnrollments();
 		List<EnrollmentDTO> enrollmentsDTO = new ArrayList<>();
 		for (Enrollment e: enrollments) {
+			if(e.getEndDate().after(new Date())) {
 			EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
 			enrollmentDTO.setId(e.getId());
 			enrollmentDTO.setStartDate(e.getStartDate());
@@ -127,7 +133,9 @@ public class CourseController {
 			//we leave course field empty
 			
 			enrollmentsDTO.add(enrollmentDTO);
+			}
 		}
+		
 		return new ResponseEntity<>(enrollmentsDTO, HttpStatus.OK);
 	}
 	
@@ -172,4 +180,38 @@ public class CourseController {
 		}
 		return new ResponseEntity<>(examsDTO, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/{studentId}/{examPeriodId}", method = RequestMethod.GET)
+	public ResponseEntity<List<CourseDTO>> getExamPeriodCourses(@PathVariable("studentId") Long studentId,
+			@PathVariable("examPeriodId") Long examPeriodId) {
+		
+		List<Enrollment> enrollments = enrollmentService.findAll();
+		
+		List<Course> coursesStudent = new ArrayList<>();
+		
+		for (Enrollment en : enrollments) {
+			if (en.getStudent().getId() == studentId) {
+				coursesStudent.add(en.getCourse());
+			}
+		}
+
+		ExamPeriod examPeriod = examPeriodService.findOne(examPeriodId);
+		
+		Set<Exam> examPeriodExams = examPeriod.getExams();
+		
+		for (Exam exam : examPeriodExams) {
+			if (exam.getStudent().getId() == studentId) {
+				if (coursesStudent.contains(exam.getCourse())) {
+					coursesStudent.remove(exam.getCourse());
+				}
+			}
+		}
+		
+		List<CourseDTO> coursesDTO = new ArrayList<>();
+		for (Course s : coursesStudent) {
+			coursesDTO.add(new CourseDTO(s));
+		}
+		return new ResponseEntity<>(coursesDTO, HttpStatus.OK);
+	}
+	
 }
