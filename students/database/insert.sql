@@ -54,7 +54,7 @@ insert into teacher (first_name, last_name, teacher_rank) values ('Nemanja', 'Ja
 
 insert into teaching (course_id, teacher_id) values (1, 1);
 insert into teaching (course_id, teacher_id) values (1, 2);
-insert into teaching (course_id, teacher_id) values (1, 4);
+insert into teaching (course_id, teacher_id) values (4, 1);
 insert into teaching (course_id, teacher_id) values (2, 2);
 insert into teaching (course_id, teacher_id) values (3, 3);
 
