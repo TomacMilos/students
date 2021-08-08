@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.kts.students.model.Course;
+import rs.ac.uns.ftn.kts.students.model.Student;
 import rs.ac.uns.ftn.kts.students.repository.CourseRepository;
 
 @Service
@@ -22,7 +23,12 @@ public class CourseService {
 	public List<Course> findAll() {
 		return courseRepository.findAll();
 	}
-	
+
+	public List<Course> findAllByActive(boolean actiive) {
+		return courseRepository.findAllByActive(actiive);
+	}
+
+
 	public Page<Course> findAll(Pageable page) {
 		return courseRepository.findAll(page);
 	}

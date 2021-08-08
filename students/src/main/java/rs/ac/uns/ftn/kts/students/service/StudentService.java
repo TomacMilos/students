@@ -28,6 +28,10 @@ public class StudentService {
 		return studentRepository.findAll(page);
 	}
 
+	public List<Student> findAllByActive(boolean actiive) {
+		return studentRepository.findAllByActive(actiive);
+	}
+
 	public Student save(Student student) {
 		return studentRepository.save(student);
 	}

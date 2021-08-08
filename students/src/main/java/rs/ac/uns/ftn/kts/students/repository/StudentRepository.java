@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import rs.ac.uns.ftn.kts.students.model.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
+
 	Student findOneByCardNumber(String cardNumber);
+
     List<Student> findAllByLastName(String lastName);
+
+    List<Student> findAllByActive(boolean active);
 }

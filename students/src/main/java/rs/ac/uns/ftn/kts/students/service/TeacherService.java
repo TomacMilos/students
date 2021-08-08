@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import rs.ac.uns.ftn.kts.students.model.Course;
 import rs.ac.uns.ftn.kts.students.model.Teacher;
 import rs.ac.uns.ftn.kts.students.repository.TeacherRepository;
 
@@ -34,5 +35,9 @@ public class TeacherService {
 
 	public void remove(Long id) {
 		teacherRepository.deleteById(id);
+	}
+
+	public List<Teacher> findAllByActive(boolean actiive) {
+		return teacherRepository.findAllByActive(actiive);
 	}
 }

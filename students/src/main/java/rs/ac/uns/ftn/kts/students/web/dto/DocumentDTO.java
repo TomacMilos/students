@@ -15,7 +15,8 @@ public class DocumentDTO {
 	public DocumentDTO(Document document) {
 		id = document.getId();
 		naziv = document.getNaziv();
-		student = new StudentDTO(document.getStudent());
+		if(document.getStudent() != null)
+			student = new StudentDTO(document.getStudent());
 	}
 
 	public Long getId() {

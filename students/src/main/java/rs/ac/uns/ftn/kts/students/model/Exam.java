@@ -1,89 +1,92 @@
 package rs.ac.uns.ftn.kts.students.model;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Exam {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Integer examPoints;
-    
+
     private Integer labPoints;
-    
+
     private Date date;
-    
+
+    private boolean active;
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-	private Course course;
-    
+    private Course course;
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-	private Student student;
-    
+    private Student student;
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-	private ExamPeriod examPeriod;
+    private ExamPeriod examPeriod;
 
-	public Long getId() {
-		return id;
-	}
+    public boolean isActive() {
+        return active;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
-	public Integer getExamPoints() {
-		return examPoints;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setExamPoints(Integer examPoints) {
-		this.examPoints = examPoints;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Integer getLabPoints() {
-		return labPoints;
-	}
+    public Integer getExamPoints() {
+        return examPoints;
+    }
 
-	public void setLabPoints(Integer labPoints) {
-		this.labPoints = labPoints;
-	}
+    public void setExamPoints(Integer examPoints) {
+        this.examPoints = examPoints;
+    }
 
-	public Date getDate() {
-		return date;
-	}
+    public Integer getLabPoints() {
+        return labPoints;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public void setLabPoints(Integer labPoints) {
+        this.labPoints = labPoints;
+    }
 
-	public Course getCourse() {
-		return course;
-	}
+    public Date getDate() {
+        return date;
+    }
 
-	public void setCourse(Course course) {
-		this.course = course;
-	}
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Course getCourse() {
+        return course;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
-	public ExamPeriod getExamPeriod() {
-		return examPeriod;
-	}
+    public Student getStudent() {
+        return student;
+    }
 
-	public void setExamPeriod(ExamPeriod examPeriod) {
-		this.examPeriod = examPeriod;
-	}
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public ExamPeriod getExamPeriod() {
+        return examPeriod;
+    }
+
+    public void setExamPeriod(ExamPeriod examPeriod) {
+        this.examPeriod = examPeriod;
+    }
 }

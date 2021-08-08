@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import rs.ac.uns.ftn.kts.students.model.ExamPeriod;
+import rs.ac.uns.ftn.kts.students.model.Teacher;
 import rs.ac.uns.ftn.kts.students.repository.ExamPeriodRepository;
 
 @Service
@@ -34,4 +35,9 @@ public class ExamPeriodService {
 	public void remove(Long id) {
 		examPeriodRepository.deleteById(id);
 	}
+
+	public List<ExamPeriod> findAllByActive(boolean actiive) {
+		return examPeriodRepository.findAllByActive(actiive);
+	}
+
 }

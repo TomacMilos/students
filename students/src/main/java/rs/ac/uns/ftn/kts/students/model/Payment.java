@@ -1,79 +1,72 @@
 package rs.ac.uns.ftn.kts.students.model;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Payment {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	
-	private String svrhaUplate;
-	
-	private Integer vrednostUplate;
-	
-	private Date date;
-	
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String svrhaUplate;
+
+    private Integer vrednostUplate;
+
+    private boolean active;
+
+    private Date date;
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-	private Student student;
-    
-//    public void remove(Student student, Payment payment) {
-//		for(Payment p : student.getPayments()) {
-//			if (p.equals(payment)) {
-//				student.getPayments().remove(p);
-//			}
-//		}
-//    }
+    private Student student;
 
-	public Long getId() {
-		return id;
-	}
+    public boolean isActive() {
+        return active;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
-	public String getSvrhaUplate() {
-		return svrhaUplate;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setSvrhaUplate(String svrhaUplate) {
-		this.svrhaUplate = svrhaUplate;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Integer getVrednostUplate() {
-		return vrednostUplate;
-	}
+    public String getSvrhaUplate() {
+        return svrhaUplate;
+    }
 
-	public void setVrednostUplate(Integer vrednostUplate) {
-		this.vrednostUplate = vrednostUplate;
-	}
+    public void setSvrhaUplate(String svrhaUplate) {
+        this.svrhaUplate = svrhaUplate;
+    }
 
-	public Date getDate() {
-		return date;
-	}
+    public Integer getVrednostUplate() {
+        return vrednostUplate;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public void setVrednostUplate(Integer vrednostUplate) {
+        this.vrednostUplate = vrednostUplate;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Date getDate() {
+        return date;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
-    
-    
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
 }

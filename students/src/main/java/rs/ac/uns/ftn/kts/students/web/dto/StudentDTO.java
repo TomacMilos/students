@@ -13,8 +13,10 @@ public class StudentDTO {
 	}
 
 	public StudentDTO(Student student) {
-		this(student.getId(), student.getCardNumber(), student.getFirstName(),
-				student.getLastName());
+		id = student.getId();
+		cardNumber = student.getCardNumber();
+		firstName = student.getFirstName();
+		lastName = student.getLastName();
 	}
 
 	public StudentDTO(Long id, String cardNumber, String firstName,

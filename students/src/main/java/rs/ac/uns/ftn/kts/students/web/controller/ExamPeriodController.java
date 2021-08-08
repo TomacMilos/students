@@ -38,7 +38,7 @@ public class ExamPeriodController {
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<List<ExamPeriodDTO>> getAllExamPeriods() {
-		List<ExamPeriod> examPeriods = examPeriodService.findAll();
+		List<ExamPeriod> examPeriods = examPeriodService.findAllByActive(true);
 		// convert examPeriods to DTOs
 		List<ExamPeriodDTO> examPeriodsDTO = new ArrayList<>();
 		for (ExamPeriod s : examPeriods) {
@@ -47,11 +47,24 @@ public class ExamPeriodController {
 		return new ResponseEntity<>(examPeriodsDTO, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/upcoming", method = RequestMethod.GET)
+	public ResponseEntity<List<ExamPeriodDTO>> getUpcomingEP() {
+		List<ExamPeriod> examPeriods = examPeriodService.findAllByActive(true);
+		// convert examPeriods to DTOs
+		List<ExamPeriodDTO> examPeriodsDTO = new ArrayList<>();
+		for (ExamPeriod s : examPeriods) {
+			if(s.getEndDate().after(new Date())) {
+				examPeriodsDTO.add(new ExamPeriodDTO(s));
+			}
+		}
+		return new ResponseEntity<>(examPeriodsDTO, HttpStatus.OK);
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<ExamPeriodDTO>> getExamPeriodsPage(Pageable page) {
 		// page object holds data about pagination and sorting
 		// the object is created based on the url parameters "page", "size" and "sort"
-		Page<ExamPeriod> examPeriods = examPeriodService.findAll(page);
+		List<ExamPeriod> examPeriods = examPeriodService.findAllByActive(true);
 
 		// convert examPeriods to DTOs
 		List<ExamPeriodDTO> examPeriodsDTO = new ArrayList<>();
@@ -103,15 +116,8 @@ public class ExamPeriodController {
 	public ResponseEntity<Void> deleteExamPeriod(@PathVariable Long id) {
 		ExamPeriod examPeriod = examPeriodService.findOne(id);
 		if (examPeriod != null) {
-
-			for (Exam e : examPeriod.getExams()) {
-				if (e.getExamPeriod().getId() == examPeriod.getId()) {
-					examPeriod.remove(e);
-					examService.save(e);
-				}
-			}
-
-			examPeriodService.remove(id);
+			examPeriod.setActive(false);
+			examPeriodService.save(examPeriod);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

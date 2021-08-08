@@ -3,8 +3,10 @@ package rs.ac.uns.ftn.kts.students.web.dto;
 import rs.ac.uns.ftn.kts.students.model.Course;
 
 public class CourseDTO {
+
 	private Long id;
 	private String name;
+	private boolean active;
 	
 	public CourseDTO() {
 		
@@ -27,4 +29,5 @@ public class CourseDTO {
 	public String getName() {
 		return name;
 	}
+
 }

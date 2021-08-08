@@ -27,7 +27,7 @@ import rs.ac.uns.ftn.kts.students.web.dto.ExamDTO;
 
 @RestController
 @RequestMapping(value = "api/exams")
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
+@CrossOrigin(origins ="*", allowedHeaders = "*")
 public class ExamController {
 	@Autowired
 	ExamService examService;
@@ -118,14 +118,14 @@ public class ExamController {
 		}
 	}
 	
-	@RequestMapping(value = "/{studentId}/examRegistration", method = RequestMethod.POST, consumes = "application/json")
-	public ResponseEntity<ExamDTO> registerExam(@PathVariable Long studentId, @RequestBody ExamDTO examDTO) {
+	@RequestMapping(value = "/{studentId}/examRegistration/{examPeriodId}", method = RequestMethod.POST, consumes = "application/json")
+	public ResponseEntity<ExamDTO> registerExam(@PathVariable Long studentId, @PathVariable Long examPeriodId, @RequestBody ExamDTO examDTO) {
 		// a new exam must have course and examPeriod defined
-		if (examDTO.getCourse() == null || examDTO.getExamPeriod() == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+//		if (examDTO.getCourse() == null || examDTO.getExamPeriod() == null) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
 		Course course = courseService.findOne(examDTO.getCourse().getId());
-		ExamPeriod examPeriod = examPeriodService.findOne(examDTO.getExamPeriod().getId());
+		ExamPeriod examPeriod = examPeriodService.findOne(examPeriodId);
 		Student student = studentService.findOne(studentId);
 		if (course == null || examPeriod == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

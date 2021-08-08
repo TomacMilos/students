@@ -1,56 +1,52 @@
 package rs.ac.uns.ftn.kts.students.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Document {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	
-	private String naziv;
-	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String naziv;
+
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-	private Student student;
-    
-//    public void remove(Student student, Document document) {
-//		for(Document d : student.getDocuments()) {
-//			if (d.equals(document)) {
-//				student.getDocuments().remove(d);
-//			}
-//		}
-//    }
+    private Student student;
 
-	public Long getId() {
-		return id;
-	}
+    private boolean active;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public boolean isActive() {
+        return active;
+    }
 
-	public String getNaziv() {
-		return naziv;
-	}
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
-	public void setNaziv(String naziv) {
-		this.naziv = naziv;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
-    
-    
+    public String getNaziv() {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+
 }

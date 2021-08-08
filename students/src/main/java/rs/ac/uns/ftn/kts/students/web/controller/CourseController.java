@@ -48,7 +48,7 @@ public class CourseController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<CourseDTO>> getCourses() {
-		List<Course> courses = courseService.findAll();
+		List<Course> courses = courseService.findAllByActive(true);
 		//convert courses to DTOs
 		List<CourseDTO> coursesDTO = new ArrayList<>();
 		for (Course s : courses) {
@@ -94,23 +94,9 @@ public class CourseController {
 	public ResponseEntity<Void> deleteCourse(@PathVariable Long id){
 		Course course = courseService.findOne(id);
 		if (course != null){
-			
-			for (Enrollment e : course.getEnrollments()) {
-				if (e.getCourse().getId() == course.getId()) {
-					course.remove(e);
-					enrollmentService.save(e);
-				}
+			course.setActive(false);
+			courseService.save(course);
 
-			}
-			
-			for (Exam e : course.getExams()) {
-				if (e.getCourse().getId() == course.getId()) {
-					course.remove(e);
-					examService.save(e);
-				}
-			}
-			
-			courseService.remove(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {		
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

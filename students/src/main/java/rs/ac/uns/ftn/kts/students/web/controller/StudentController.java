@@ -24,11 +24,7 @@ import rs.ac.uns.ftn.kts.students.model.Exam;
 import rs.ac.uns.ftn.kts.students.model.Payment;
 import rs.ac.uns.ftn.kts.students.model.Student;
 import rs.ac.uns.ftn.kts.students.model.User;
-import rs.ac.uns.ftn.kts.students.service.DocumentService;
-import rs.ac.uns.ftn.kts.students.service.EnrollmentService;
-import rs.ac.uns.ftn.kts.students.service.ExamService;
-import rs.ac.uns.ftn.kts.students.service.StudentService;
-import rs.ac.uns.ftn.kts.students.service.UserService;
+import rs.ac.uns.ftn.kts.students.service.*;
 import rs.ac.uns.ftn.kts.students.web.dto.CourseDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.DocumentDTO;
 import rs.ac.uns.ftn.kts.students.web.dto.EnrollmentDTO;
@@ -50,11 +46,15 @@ public class StudentController {
 	@Autowired
 	private DocumentService documentService;
 	@Autowired
+	private PaymentService paymentService;
+	@Autowired
 	private UserService userService;
+
+	public boolean l;
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<List<StudentDTO>> getAllStudents() {
-		List<Student> students = studentService.findAll();
+		List<Student> students = studentService.findAllByActive(true);
 		// convert students to DTOs
 		List<StudentDTO> studentsDTO = new ArrayList<>();
 		for (Student s : students) {
@@ -63,18 +63,42 @@ public class StudentController {
 		return new ResponseEntity<>(studentsDTO, HttpStatus.OK);
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<StudentDTO>> getStudentsPage(Pageable page) {
-		// page object holds data about pagination and sorting
-		// the object is created based on the url parameters "page", "size" and "sort"
-		Page<Student> students = studentService.findAll(page);
-
+	@RequestMapping(value = "/course/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List<StudentDTO>> getStudentsForCourse(@PathVariable Long id) {
+		List<Student> students = studentService.findAllByActive(true);
 		// convert students to DTOs
-		List<StudentDTO> studentsDTO = new ArrayList<>();
+		List<StudentDTO> studentiDTO = new ArrayList<>();
+		List<Student> studentiKojiNisuPolozili = new ArrayList<>();
+
 		for (Student s : students) {
-			studentsDTO.add(new StudentDTO(s));
+			Set<Exam> exams = s.getExams();
+			boolean izlazio = false;
+			for (Exam e : exams) {
+				if(e.getCourse().getId() == id) {
+					izlazio = true;
+					double points = e.getLabPoints() + e.getExamPoints();
+					if (points < 51) {
+						studentiKojiNisuPolozili.add(s);
+					}
+				}
+			}
+			if (!izlazio){
+				studentiKojiNisuPolozili.add(s);
+			}
 		}
-		return new ResponseEntity<>(studentsDTO, HttpStatus.OK);
+		studentiKojiNisuPolozili.forEach(student -> {
+			l = false;
+			student.getEnrollments().forEach(enrollment -> {
+				if(enrollment.getEndDate().after(new Date()) && enrollment.getCourse().getId() == id){
+					l = true;
+				}
+			});
+			if(!l){
+				studentiDTO.add(new StudentDTO(student));
+			}
+		});
+
+		return new ResponseEntity<>(studentiDTO, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -119,6 +143,10 @@ public class StudentController {
 		Student student = studentService.findOne(id);
 		if (student != null) {
 
+			student.setActive(false);
+
+			studentService.save(student);
+
 			for (Enrollment e : student.getEnrollments()) {
 				if (e.getStudent().getId() == student.getId()) {
 					student.remove(e);
@@ -126,21 +154,6 @@ public class StudentController {
 				}
 
 			}
-
-			for (Exam e : student.getExams()) {
-				if (e.getStudent().getId() == student.getId()) {
-					student.remove(e);
-					examService.save(e);
-				}
-			}
-
-			for (Document d : student.getDocuments()) {
-				if (d.getStudent().getId() == student.getId()) {
-					student.remove(d);
-					documentService.save(d);
-				}
-			}
-			
 			List<User> users = userService.findAll();
 			
 			for (User user : users) {
@@ -151,8 +164,6 @@ public class StudentController {
 				}
 
 			}
-
-			studentService.remove(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -185,14 +196,17 @@ public class StudentController {
 		Set<Enrollment> enrollments = student.getEnrollments();
 		List<EnrollmentDTO> enrollmentsDTO = new ArrayList<>();
 		for (Enrollment e : enrollments) {
-			EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
-			enrollmentDTO.setId(e.getId());
-			enrollmentDTO.setStartDate(e.getStartDate());
-			enrollmentDTO.setEndDate(e.getEndDate());
-			enrollmentDTO.setCourse(new CourseDTO(e.getCourse()));
-			// we leave student field empty
+			if(e.getEndDate().after(new Date())) {
+				EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
+				enrollmentDTO.setId(e.getId());
+				enrollmentDTO.setStartDate(e.getStartDate());
+				enrollmentDTO.setEndDate(e.getEndDate());
+				if (e.getCourse() != null)
+					enrollmentDTO.setCourse(new CourseDTO(e.getCourse()));
+				// we leave student field empty
 
-			enrollmentsDTO.add(enrollmentDTO);
+				enrollmentsDTO.add(enrollmentDTO);
+			}
 		}
 		return new ResponseEntity<>(enrollmentsDTO, HttpStatus.OK);
 	}
@@ -260,7 +274,8 @@ public class StudentController {
 				examDTO.setExamPoints(e.getExamPoints());
 				examDTO.setLabPoints(e.getLabPoints());
 				examDTO.setDate(e.getDate());
-				examDTO.setCourse(new CourseDTO(e.getCourse()));
+				if(e.getCourse() != null)
+					examDTO.setCourse(new CourseDTO(e.getCourse()));
 				examDTO.setExamPeriod(new ExamPeriodDTO(e.getExamPeriod()));
 
 				examsDTO.add(examDTO);
