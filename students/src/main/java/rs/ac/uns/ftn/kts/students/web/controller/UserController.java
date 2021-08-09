@@ -12,9 +12,11 @@ import rs.ac.uns.ftn.kts.students.service.AuthorityService;
 import rs.ac.uns.ftn.kts.students.service.StudentService;
 import rs.ac.uns.ftn.kts.students.service.TeacherService;
 import rs.ac.uns.ftn.kts.students.service.UserService;
-import rs.ac.uns.ftn.kts.students.web.dto.StudentDTO;
+import rs.ac.uns.ftn.kts.students.util.PasswordBCrypt;
 import rs.ac.uns.ftn.kts.students.web.dto.TeacherStudentID;
-import rs.ac.uns.ftn.kts.students.web.dto.UserDTO;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 @RequestMapping(value = "api/user")
@@ -33,26 +35,31 @@ public class UserController {
     @Autowired
     private TeacherService teacherService;
 
-    @PostMapping(value = "/registerStudent/{username}/{password}/{cardNumber}/{firstName}/{lastName}")
-    public ResponseEntity<Void> registerStudent(@PathVariable("username") String username,
-                                                @PathVariable("password") String password, @PathVariable("cardNumber") String cardNumber,
-                                                @PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
+    @PostMapping(value = "/registerStudent/{password}/{firstName}/{lastName}")
+    public ResponseEntity<Void> registerStudent(
+            @PathVariable("password") String password,
+            @PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
 
         Student student = new Student();
-        student.setCardNumber(cardNumber);
         student.setFirstName(firstName);
         student.setLastName(lastName);
+        student.setCardNumber("SF");
 
+        student = studentService.save(student);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy");
+        student.setCardNumber("SF-"+student.getId()+"-"+df.format(new Date()));
+        student.setActive(true);
         student = studentService.save(student);
 
         User user = new User();
-
-        user.setUsername(username);
-        user.setPassword(password);
+        user.setActive(true);
+        user.setUsername(student.getCardNumber());
+        user.setPassword(PasswordBCrypt.hashPassword(password));
         Authority auth = authorityService.findByName("STUDENT");
         user.setAuthority(auth);
         user.setStudent(student);
         user.setTeacher(null);
+
 
         userService.save(user);
         System.out.println("REGISTER..........");
@@ -70,20 +77,27 @@ public class UserController {
         teacher.setLastName(lastName);
         teacher.setTeacherRank(teacherRank);
         teacher.setCourses(null);
+        teacher.setActive(true);
 
-        teacher = teacherService.save(teacher);
 
-        User user = new User();
+        User user = userService.findByUsername(username);
+        User newUser = new User();
 
-        user.setUsername(username);
-        user.setPassword(password);
-        Authority auth = authorityService.findByName("NASTAVNIK");
-        user.setAuthority(auth);
-        user.setStudent(null);
-        user.setTeacher(teacher);
+        if(user == null) {
+            teacher = teacherService.save(teacher);
+            newUser.setUsername(username);
+            newUser.setPassword(PasswordBCrypt.hashPassword(password));
+            Authority auth = authorityService.findByName("NASTAVNIK");
+            newUser.setAuthority(auth);
+            newUser.setStudent(null);
+            newUser.setTeacher(teacher);
+            newUser.setActive(true);
 
-        userService.save(user);
-        System.out.println("REGISTER..........");
+            userService.save(newUser);
+            System.out.println("REGISTER..........");
+        }else {
+            throw new ResourceException(HttpStatus.BAD_REQUEST, "Korisnik sa tim korisnickim imenom vec postoji");
+        }
         return new ResponseEntity<Void>(HttpStatus.OK);
 
     }
@@ -92,20 +106,25 @@ public class UserController {
     public ResponseEntity<Void> registerAdmin(@PathVariable("username") String username,
                                               @PathVariable("password") String password) {
 
-        User user = new User();
+        User user = userService.findByUsername(username);
+        User newUser = new User();
+        if (user == null) {
+            newUser.setUsername(username);
+            newUser.setPassword(PasswordBCrypt.hashPassword(password));
+            Authority auth = authorityService.findByName("ADMIN");
+            newUser.setAuthority(auth);
+            newUser.setStudent(null);
+            newUser.setTeacher(null);
+            userService.save(newUser);
+            System.out.println("REGISTER..........");
+        } else {
+            throw new ResourceException(HttpStatus.BAD_REQUEST, "Korisnik sa tim korisnickim imenom vec postoji");
+        }
 
-        user.setUsername(username);
-        user.setPassword(password);
-        Authority auth = authorityService.findByName("ADMIN");
-        user.setAuthority(auth);
-        user.setStudent(null);
-        user.setTeacher(null);
-
-        userService.save(user);
-        System.out.println("REGISTER..........");
         return new ResponseEntity<Void>(HttpStatus.OK);
 
     }
+
     @RequestMapping(value = "/{username}", method = RequestMethod.GET)
     public ResponseEntity<TeacherStudentID> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
@@ -114,9 +133,9 @@ public class UserController {
         }
 
         TeacherStudentID teacherStudentID = new TeacherStudentID();
-        if(user.getTeacher() !=null)
+        if (user.getTeacher() != null)
             teacherStudentID.setTeacherID(user.getTeacher().getId());
-        if(user.getStudent() != null)
+        if (user.getStudent() != null)
             teacherStudentID.setStudentID(user.getStudent().getId());
 
         return new ResponseEntity<>(teacherStudentID, HttpStatus.OK);

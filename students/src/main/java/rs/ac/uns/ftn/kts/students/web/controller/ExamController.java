@@ -118,28 +118,27 @@ public class ExamController {
 		}
 	}
 	
-	@RequestMapping(value = "/{studentId}/examRegistration/{examPeriodId}", method = RequestMethod.POST, consumes = "application/json")
-	public ResponseEntity<ExamDTO> registerExam(@PathVariable Long studentId, @PathVariable Long examPeriodId, @RequestBody ExamDTO examDTO) {
+	@RequestMapping(value = "/{studentID}/examRegistration/{examID}", method = RequestMethod.POST, consumes = "application/json")
+	public ResponseEntity<ExamDTO> registerExam(@PathVariable Long studentID, @PathVariable Long examID) {
 		// a new exam must have course and examPeriod defined
 //		if (examDTO.getCourse() == null || examDTO.getExamPeriod() == null) {
 //			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //		}
-		Course course = courseService.findOne(examDTO.getCourse().getId());
-		ExamPeriod examPeriod = examPeriodService.findOne(examPeriodId);
-		Student student = studentService.findOne(studentId);
-		if (course == null || examPeriod == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		Exam exam = new Exam();
-		exam.setDate(null);
-		exam.setExamPoints(0);
-		exam.setLabPoints(0);
-		exam.setStudent(student);
-		exam.setCourse(course);
-		exam.setExamPeriod(examPeriod);
+		Student student = studentService.findOne(studentID);
+		Exam exam = examService.findOne(examID);
 
-		exam = examService.save(exam);
-		return new ResponseEntity<>(new ExamDTO(exam), HttpStatus.CREATED);
+		Exam newExam = new Exam();
+		newExam.setExamPoints(exam.getExamPoints());
+		newExam.setExamPeriod(exam.getExamPeriod());
+		newExam.setDate(exam.getDate());
+		newExam.setCourse(exam.getCourse());
+		newExam.setStudent(student);
+		newExam.setLabPoints(exam.getLabPoints());
+		student.getExams().add(newExam);
+
+		examService.save(newExam);
+		studentService.save(student);
+		return new ResponseEntity<>(new ExamDTO(newExam), HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/examDate", method = RequestMethod.PUT, consumes = "application/json")
